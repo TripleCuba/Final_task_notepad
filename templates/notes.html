@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% block content %}
+<form action="{% url 'search' %}" method="get" class="d-flex flex-column">
+    <input name="query" type="text" placeholder="Search" class="form-control text-center">
+    <input type="submit" class="btn btn-light" value="Search">
+</form>
+{% if category %}
+<div class="d-flex flex-column w-100 text-center align-items-center">
+    <h1>{{category.category_title}}</h1>
+    <h4>{{category.description}}</h4>
+    <div class=" d-flex ">
+        <a class="btn btn-outline-secondary" href="{% url 'update_category' category.id %}">Update Category
+            Information</a>
+        <a class="btn btn-outline-danger" href="{% url 'delete_category' category.id %}">Delete Category</a>
+    </div>
+
+</div>
+{% else %}
+<div class="w-75 mx-auto py-2">
+    <p class="text-light">Filter by category</p>
+    <div class=" d-flex justify-content-center">
+
+        {% for category in categories %}
+        <a class="btn btn-light flex-fill mx-1" href="{% url 'notes_by_category' category.id %}">{{category.category_title}}</a>
+        {% endfor %}
+    </div>
+</div>
+
+{% endif %}
+
+<div class="d-flex flex-column">
+
+    {% if not data and not category %}
+    <div class="w-75 mx-auto my-4 text-center text-light">
+        <h3>You have not created any notes yet</h3>
+        <p>Create a note below!</p>
+    </div>
+    {% elif not data and category %}
+    <div class="w-75 mx-auto my-4 text-center text-light">
+        <h3>You have not created any notes in this category yet</h3>
+        <p>Create a note below!</p>
+    </div>
+    {% endif %}
+
+    {% for note in data %}
+    <div class="w-50 d-flex flex-column mx-auto py-3 my-1 border-top border-white p-2 shadow-sm rounded ">
+    <div class="text-center">
+        <h1 class="text-light">{{note.title}}</h1>
+    </div>
+    <div>
+        <p class="text-secondary">Category title: {{note.category.category_title}}</p>
+        <p>{{note.note_text}}</p>
+    </div>
+    <div class="singleCardImg">
+        {% if note.note_image %}
+            <img class="w-100" src="{{note.note_image.url}}">
+        {% endif %}
+    </div>
+    <div class="d-flex flex-column singleCardA" >
+        <a href="{% url 'note' note.id %}">View Note</a>
+        <a href="{% url 'update_note' note.id %}">Update Note</a>
+        <a href="{% url 'delete_note' note.id %}">Delete Note</a>
+    </div>
+</div>
+    {% endfor %}
+</div>
+
+<div class="d-flex flex-column w-75 mx-auto py-2 border-top border-light">
+    {% if category %}
+    <h4 class="text-light">Create new note for this category!</h4>
+    {% else %}
+    <h4 class="text-light">Create new note!</h4>
+    {% endif %}
+    <form method="post" enctype="multipart/form-data" class="d-flex flex-column ">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label class="formLabel">{{form.title.label}}</label>
+            {{form.title}}
+        </div>
+        <div class="mb-3">
+            <label class="formLabel">{{form.note_text.label}}</label>
+            {{form.note_text}}
+        </div>
+        <div class="mb-3">
+            <label class="formLabel">{{form.note_image.label}}</label>
+            {{form.note_image}}
+        </div>
+        {% if not category %}
+        <div class="mb-3">
+            <label class="formLabel">{{form.category.label}}</label>
+            {{form.category}}
+        </div>
+        {% endif %}
+        <input class="btn btn-light" type="submit" value="Post!">
+
+
+    </form>
+</div>
+{% endblock %}

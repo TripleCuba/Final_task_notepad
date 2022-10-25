@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block content %}
+<form class="d-flex flex-column w-75 mb-2 py-2 mx-auto" method="post" enctype="multipart/form-data">
+    <h4 class="text-light text-center">Add new category!</h4>
+    {% csrf_token %}
+    <label class="formLabel">{{ form.category_title.label }}</label>
+    {{ form.category_title }}
+    <label class="formLabel"> {{form.description.label}}</label>
+    {{ form.description }}
+    <label class="formLabel">{{ form.category_image.label }}</label>
+    {{ form.category_image }}
+    <input class="btn btn-secondary" type="submit" value="Add Category!">
+</form>
+{% if data %}
+{% for category in data %}
+<a href="{% url 'notes_by_category' category.id%}">
+<div class="category_card">
+
+    <div class="category_text text-light">
+        <h1>{{ category.category_title }}</h1>
+    </div>
+
+
+
+    <img class="category_img" src="{{category.category_image.url}}"/>
+
+
+</div>
+    </a>
+
+{% endfor %}
+
+{% endif %}
+
+{% endblock %}

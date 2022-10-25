@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="text-center padding-2 d-flex flex-column justify-content-center"
+     style="height: 400px">
+    <h1>You successfully logged out</h1>
+    <h5 class="p-2">Click <a class="link-light text-decoration-none" href="{% url 'login' %}">Here</a> to login again! </h5>
+</div>
+{% endblock %}

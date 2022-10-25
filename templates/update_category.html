@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="d-flex flex-column w-75 mx-auto py-2">
+    <h4 class="text-light">Update Your note!</h4>
+<form method="post" enctype="multipart/form-data" class="d-flex flex-column">
+    {% csrf_token %}
+    <label class="formLabel">{{form.category_title.label}}</label>
+    {{form.category_title}}
+    <label class="formLabel">{{form.description.label}}</label>
+    {{form.description}}
+    <label class="formLabel">{{form.category_image.label}}</label>
+    {{form.category_image}}
+    <input class="btn btn-light" type="submit" value="Update Category">
+</form>
+</div>
+{% endblock %}

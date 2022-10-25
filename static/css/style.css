@@ -1,0 +1,68 @@
+
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+
+body{
+    background: url('/static/img/bg_img.jpg') no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover
+    font-family: 'Times New Roman', serif;
+    }
+
+.main{
+    background-color: rgba(237, 234, 222, 0.8);
+    }
+.category_card{
+    width: 100%;
+    display:flex;
+    flex-direction:column;
+    text-align: center;
+    border: solid 1px black;
+    height: 250px;
+    background-color: rgba(54, 69, 79, 0.6);
+    position:relative;
+    text-decoration:none;
+    }
+.category_card:hover{
+    background-color: rgba(255, 255, 255, 0);
+    transition: 1s;
+    }
+.category_text{
+    position:absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    }
+.category_img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    object-position:center;
+
+    z-index: -1;
+    }
+.formLabel{
+    text-align:center;
+    padding: 0.5rem 1rem;
+    color: white;
+    font-size: 1rem;
+}
+
+.singleCardImg{
+    width:100%;
+    }
+.singleCardA a{
+    text-align:center;
+    width:100%;
+    background-color:rgb(27,25,25);
+    color:white;
+    text-decoration:none;
+    border-top: 1px solid white;
+    }
+.singleCardImg img{
+    object-fit:contain;
+    max-height:250px;
+    height: 100%;
+    }

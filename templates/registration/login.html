@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="d-flex flex-column w-75 mt-5 mx-auto justify-content-center"
+     style="height:400px">
+    <h1 class="text-light">Log In</h1>
+<form method="post" class="d-flex flex-column my-3 ">
+    {% csrf_token %}
+    <label class="text-light">{{ form.username.label }}</label>
+    {{ form.username }}
+    <label class="text-light">{{ form.password.label }}</label>
+    {{ form.password }}
+    <input class="btn btn-dark my-1" type="submit" value="Login">
+</form>
+    <p>Don't have an account? Create new one <a class="link-light text-decoration-none" href="{% url 'sign_up' %}">Here</a>!</p>
+    <p>Forgot your password? Click <a class="link-light text-decoration-none" href="{% url 'password_reset' %}">Here</a> to reset your password!</p>
+    </div>
+{% endblock %}

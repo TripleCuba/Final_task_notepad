@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="d-flex flex-column w-75 mt-5 mx-auto justify-content-center"
+     style="height:500px">
+    <h1 class="text-light">Sign Up</h1>
+<form method="post" class="d-flex flex-column my-3 ">
+    {% csrf_token %}
+    <label class="text-light">{{ form.username.label }}</label>
+    {{ form.username }}
+    <label class="text-light">{{ form.email.label }}</label>
+    {{ form.email }}
+    <label class="text-light">{{ form.password1.label }}</label>
+    {{ form.password1 }}
+    <label class="text-light">{{ form.password2.label }}</label>
+    {{ form.password2 }}
+    <input class="btn btn-dark my-1" type="submit" value="Sign Up">
+</form>
+    <p>Already have an account? Log in <a class="link-light text-decoration-none" href="{% url 'login' %}">Here</a>!</p>
+    </div>
+{% endblock %}

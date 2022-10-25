@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="w-75 mx-auto py-2">
+
+    {% if results %}
+    <h4>We found {{results_length}} results for <span class="text-white">{{query}}</span></h4>
+    <ul>
+        {% for note in results %}
+        <li class="d-flex justify-content-between border-top border-light py-1">
+            <p>Title: {{ note.title }}</p>
+            <a class="link-light text-decoration-none" href="{% url 'note' note.id %}">View note</a>
+            <p>Category: {{ note.category }}</p>
+
+            <a class="link-light text-decoration-none" href="{% url 'notes_by_category' note.category.id %}">View
+                category</a>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <h4>No results found for <span class="text-light">{{query}}</span></h4>
+    <p>Try agian or see the all notes <a class="text-decoration-none link-light" href="{% url 'notes' %}">Here</a>!</p>
+
+    {% endif %}
+    <form action="{% url 'search' %}" method="get" class="d-flex flex-column">
+    <input name="query" type="text" placeholder="Search" class="form-control text-center">
+    <input type="submit" class="btn btn-light" value="Search">
+</form>
+
+
+</div>
+{% endblock %}
