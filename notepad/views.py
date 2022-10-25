@@ -1,13 +1,23 @@
 from django.shortcuts import render, redirect, reverse
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
-from .models import Note, Category
-from .forms import AddNoteForm, AddCategoryForm, CreateUserForm, UpdateCategoryForm, UpdateNoteForm
+from .models import Note, Category, User
+from .forms import AddNoteForm, AddCategoryForm, CreateUserForm, UpdateCategoryForm, UpdateNoteForm, \
+    TotalNotesUpdateForm
 from django.db.models import Q
 
 
 def index(request):
     return render(request, 'index.html')
+
+
+def update_total_notes(request):
+    all_user_notes = Note.objects.filter(category__user=request.user.id).all()
+    user = User.objects.filter(id=request.user.id).first()
+    user.total_notes = len(all_user_notes)
+    print(user.total_notes)
+    form = TotalNotesUpdateForm({'total_notes': user.total_notes}, instance=user)
+    form.save()
 
 
 def sign_up(request):
@@ -27,9 +37,11 @@ def notes(request):
     data = Note.objects.filter(category__user=request.user.id).all()
     categories = Category.objects.filter(user=request.user.id).all()
     form = AddNoteForm()
+    form.fields['category'].queryset = Category.objects.filter(user=request.user.id).all()
     if request.method == 'POST':
         note = AddNoteForm(request.POST, request.FILES)
         note.save()
+        update_total_notes(request)
         return redirect(reverse('notes'))
 
     context = {
@@ -58,6 +70,7 @@ def note(request, note_id):
 @login_required(login_url='/registration/login')
 def update_note(request, note_id):
     note = Note.objects.filter(id=note_id).first()
+
     if note and note.category.user.id == request.user.id:
         if request.method == 'POST':
             form = UpdateNoteForm(request.POST, request.FILES, instance=note)
@@ -70,6 +83,7 @@ def update_note(request, note_id):
                 'note_image': note.note_image,
                 'category': note.category
             })
+            form.fields['category'].queryset = Category.objects.filter(user=request.user.id).all()
         context = {
             'form': form
         }
@@ -84,6 +98,7 @@ def delete_note(request, note_id):
     data = Note.objects.filter(id=note_id).first()
     if data and data.category.user.id == request.user.id:
         data.delete()
+        update_total_notes(request)
         return redirect(reverse('notes'))
     else:
         return redirect(reverse('notes'))
@@ -119,6 +134,7 @@ def notes_by_category(request, category_id):
             request_data['category'] = category_id
             note = AddNoteForm(request_data, request.FILES)
             note.save()
+            update_total_notes(request)
             return redirect('notes_by_category', category_id=category_id)
         data = Note.objects.filter(category=category_id).all()
         category = Category.objects.filter(id=category_id).first()
@@ -162,6 +178,7 @@ def delete_category(request, id):
     data = Category.objects.filter(id=id).first()
     if data and data.user.id == request.user.id:
         data.delete()
+        update_total_notes(request)
         return redirect(reverse('categories'))
     else:
         return redirect(reverse('categories'))
@@ -172,10 +189,10 @@ def search(request):
     query = request.GET.get('query')
     results = Note.objects.filter(
         category__user=request.user.id and
-        Q(title__icontains=query) |
-        Q(note_text__icontains=query) |
-        Q(category__category_title__icontains=query) |
-        Q(category__description__icontains=query)
+                       Q(title__icontains=query) |
+                       Q(note_text__icontains=query) |
+                       Q(category__category_title__icontains=query) |
+                       Q(category__description__icontains=query)
     )
     results_length = len(results)
     context = {

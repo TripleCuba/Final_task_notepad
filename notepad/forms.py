@@ -57,4 +57,9 @@ class UpdateCategoryForm(ModelForm):
             'description': forms.TextInput(attrs={'class': 'form-control'}),
             'category_image': forms.FileInput(attrs={'class': 'form-control'})}
 
+class TotalNotesUpdateForm(ModelForm):
+    class Meta:
+        model = User
+        fields = ['total_notes']
+
 
